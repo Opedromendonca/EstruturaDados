@@ -1,25 +1,34 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 struct ALUNOS {
     int matricula;
     double g1, g2, media;
 };
 
-nt main() {
-    int n;
-    struct ALUNOS alunos[MAX_ALUNOS];
+int compararMedia(const void *a, const void *b) {
+    struct ALUNOS *alunoA = (struct ALUNOS *)a;
+    struct ALUNOS *alunoB = (struct ALUNOS *)b;
+    if (alunoA->media > alunoB->media) return 1;
+    if (alunoA->media < alunoB->media) return -1;
+    return 0;
+}
 
-    printf("Quantos alunos serao cadastrados? ");
+int main() {
+    int n;
+    printf("# Quantos você quer cadastrar?\n");
     scanf("%d", &n);
 
+    struct ALUNOS alunos[n];
+
     for (int i = 0; i < n; i++) {
-        printf("Cadastro do aluno %d:\n", i + 1);
-        printf("Matricula: ");
+        printf("# Digite Matricula aluno %d:\n", i);
         scanf("%d", &alunos[i].matricula);
-        printf("Nota G1: ");
+        printf("# Digite Nota G1 aluno %d:\n", i);
         scanf("%lf", &alunos[i].g1);
-        printf("Nota G2: ");
+        printf("# Digite Nota G2 aluno %d:\n", i);
         scanf("%lf", &alunos[i].g2);
+        alunos[i].media = (alunos[i].g1 + alunos[i].g2) / 2.0;
     }
 
     return 0;
