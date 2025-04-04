@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MEDIA_MINIMA 6.0
+
 struct ALUNOS {
     int matricula;
     double g1, g2, media;
@@ -29,15 +31,35 @@ int main() {
         printf("# Digite Nota G2 aluno %d:\n", i);
         scanf("%lf", &alunos[i].g2);
         alunos[i].media = (alunos[i].g1 + alunos[i].g2) / 2.0;
+    }    
+    int indiceMaior = 0;
+    for (int i = 1; i < n; i++) 
+    {
+        if (alunos[i].media > alunos[indiceMaior].media) 
+        {
+            indiceMaior = i;
+        }
     }
-    qsort(alunos, n, sizeof(struct ALUNOS), compararMedia);
-              
-    printf("Aluno Matrícula: %d tem a maior Media: (%.2lf)\n", alunos[n - 1].matricula, alunos[n - 1].media);
-        
-    printf("=== %d ALUNOS Depuracao ===\n", n);
+    printf("\nAluno com matricula %d tem a maior media: %.2lf\n", 
+        alunos[indiceMaior].matricula, alunos[indiceMaior].media);
+
+
+     qsort(alunos, n, sizeof(struct ALUNOS), compararMedia);
+
+
+ printf("\n=== Lista de %d alunos ordenados por media ===\n", n);
+ for (int i = 0; i < n; i++) {
+     printf("Matricula: %d - Media: %.2lf\n", alunos[i].matricula, alunos[i].media);
+    }
+
+    printf("\n=== Alunos que precisam de substituicao ===\n");
     for (int i = 0; i < n; i++) 
     {
-      printf("Matrícula: %d\n", alunos[i].matricula);
+        if (alunos[i].media < MEDIA_MINIMA) 
+        {
+            printf("Matricula: %d - G1: %.2lf - G2: %.2lf - Media: %.2lf\n",alunos[i].matricula, alunos[i].g1, alunos[i].g2, alunos[i].media);
+        }
     }
+
     return 0;
 }
