@@ -30,6 +30,14 @@ int main() {
         scanf("%lf", &alunos[i].g2);
         alunos[i].media = (alunos[i].g1 + alunos[i].g2) / 2.0;
     }
-
+    qsort(alunos, n, sizeof(struct ALUNOS), compararMedia);
+              
+    printf("Aluno Matrícula: %d tem a maior Media: (%.2lf)\n", alunos[n - 1].matricula, alunos[n - 1].media);
+        
+    printf("=== %d ALUNOS Depuracao ===\n", n);
+    for (int i = 0; i < n; i++) 
+    {
+      printf("Matrícula: %d\n", alunos[i].matricula);
+    }
     return 0;
 }
