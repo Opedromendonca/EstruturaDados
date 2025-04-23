@@ -6,6 +6,34 @@ typedef struct aluno {
     double g1, g2, media;
 } Aluno;
 
+void calcularMedias(Aluno* alunos, int n) {
+    for (int i = 0; i < n; i++) {
+        alunos[i].media = (alunos[i].g1 + alunos[i].g2) / 2;
+    }
+}
+
+int encontrarMelhorAluno(Aluno* alunos, int n) {
+    int melhor = 0;
+    for (int i = 1; i < n; i++) {
+        if (alunos[i].media > alunos[melhor].media) {
+            melhor = i;
+        }
+    }
+    return melhor;
+}
+
+void ordenarPorMedia(Aluno* alunos, int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (alunos[j].media < alunos[j + 1].media) {
+                Aluno aux = alunos[j];
+                alunos[j] = alunos[j + 1];
+                alunos[j + 1] = aux;
+            }
+        }
+    }
+}
+
 int main() {
     Aluno *alunos = NULL;  
     int numAlunos = 0;  
