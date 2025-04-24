@@ -79,4 +79,22 @@ int main() {
     } while (continuar == 's' || continuar == 'S');
 
     calcularMedias(alunos, numAlunos);
+
+int AlMelhor = encontrarMelhorAluno(alunos, numAlunos);
+
+    printf("\n--- Melhor Aluno ---\n");
+    printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf\n",
+           alunos[AlMelhor].matricula, alunos[AlMelhor].g1, alunos[AlMelhor].g2, alunos[AlMelhor].media);
+
+    ordenarPorMedia(alunos, numAlunos);
+
+    printf("\n--- Alunos ordenados por media (decrescente) ---\n");
+    imprimirAlunos(alunos, numAlunos);
+
+    printf("\n--- Alunos que precisam de substituicao ---\n");
+    imprimirSubstituicao(alunos, numAlunos);
+
+    free(alunos);
+
+    return 0;
 }
