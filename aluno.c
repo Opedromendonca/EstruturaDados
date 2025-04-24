@@ -34,6 +34,27 @@ void ordenarPorMedia(Aluno* alunos, int n) {
     }
 }
 
+void imprimirAlunos(Aluno* aluno, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        printf("Matricula: %d | G1: %.2lf | G2:%.2lf | Media: %.2lf \n",
+        aluno[i].matricula, aluno[i].g1, aluno[i].g2, aluno[i].media);
+    }
+}
+
+void imprimirSubstituicao(Aluno* alunos, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (alunos[i].media < 7.0)
+        {
+            printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf \n", 
+            alunos[i].matricula, alunos[i].g1, alunos[i].g2, alunos[i].media);
+        }
+    }
+}
+
 int main() {
     Aluno *alunos = NULL;  
     int numAlunos = 0;  
@@ -56,3 +77,6 @@ int main() {
         printf("Deseja continuar cadastro cadastrar(s/n): ");
         scanf(" %c", &continuar);
     } while (continuar == 's' || continuar == 'S');
+
+    calcularMedias(alunos, numAlunos);
+}
