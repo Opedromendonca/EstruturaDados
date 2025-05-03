@@ -100,7 +100,7 @@ void printaSub(struct S* lista) {
     }
 }
 
-void lerDados(int* mat, double* g1, double* g2) {
+void ler(int* mat, double* g1, double* g2) {
     printf("Matricula: ");
     scanf("%d", mat);
     printf("G1: ");
@@ -116,7 +116,7 @@ int main() {
     char continuar;
 
     do {
-        lerDados(&mat, &g1, &g2);  
+        ler(&mat, &g1, &g2);  
         add(&lista, mat, g1, g2);  
 
         printf("Cadastrar outro? (Y/n): ");
