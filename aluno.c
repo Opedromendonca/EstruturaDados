@@ -1,100 +1,148 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct aluno {
-    int matricula;
+struct S {
+    int mat;
     double g1, g2, media;
-} Aluno;
+    struct S* prox;
+};
 
-void calcularMedias(Aluno* alunos, int n) {
-    for (int i = 0; i < n; i++) {
-        alunos[i].media = (alunos[i].g1 + alunos[i].g2) / 2;
+struct S* new(int mat, double g1, double g2) {
+    struct S* novo = malloc(sizeof(*novo)); 
+
+    if (novo == NULL) { 
+        fprintf(stderr, "Erro ao alocar\n");
+        exit(1);  
+    }
+    
+    novo->mat = mat;
+    novo->g1 = g1;
+    novo->g2 = g2;
+    novo->media = 0.0;  
+    novo->prox = NULL;
+    return novo;
+}
+
+void add(struct S** lista, int mat, double g1, double g2) {
+    struct S* novo = new(mat, g1, g2);
+    novo->prox = *lista;
+    *lista = novo;
+}
+
+void calcMedia(struct S* lista) {
+    struct S* atual = lista;
+    while (atual != NULL) {
+        atual->media = (atual->g1 + atual->g2) / 2.0;
+        atual = atual->prox;
     }
 }
 
-int encontrarMelhorAluno(Aluno* alunos, int n) {
-    int melhor = 0;
-    for (int i = 1; i < n; i++) {
-        if (alunos[i].media > alunos[melhor].media) {
-            melhor = i;
+void printa(struct S* lista) {
+    struct S* atual = lista;
+    while (atual != NULL) {
+        printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf\n", 
+               atual->mat, atual->g1, atual->g2, atual->media);
+        atual = atual->prox;
+    }
+}
+
+struct S* maior(struct S* lista) {
+    struct S* atual = lista;
+    struct S* maior = lista;
+
+    while (atual != NULL) {
+        if (atual->media > maior->media) {
+            maior = atual;
         }
+        atual = atual->prox;
     }
-    return melhor;
+    return maior;
 }
 
-void ordenarPorMedia(Aluno* alunos, int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (alunos[j].media < alunos[j + 1].media) {
-                Aluno aux = alunos[j];
-                alunos[j] = alunos[j + 1];
-                alunos[j + 1] = aux;
+void sort(struct S** lista) {
+    if (*lista == NULL || (*lista)->prox == NULL) return;
+
+    struct S* i, *j;
+    double tempMedia;
+    int tempMat;
+    double tempG1, tempG2;
+
+    for (i = *lista; i != NULL; i = i->prox) {
+        for (j = i->prox; j != NULL; j = j->prox) {
+            if (i->media < j->media) {
+                tempMat = i->mat;
+                tempG1 = i->g1;
+                tempG2 = i->g2;
+                tempMedia = i->media;
+
+                i->mat = j->mat;
+                i->g1 = j->g1;
+                i->g2 = j->g2;
+                i->media = j->media;
+
+                j->mat = tempMat;
+                j->g1 = tempG1;
+                j->g2 = tempG2;
+                j->media = tempMedia;
             }
         }
     }
 }
 
-void imprimirAlunos(Aluno* aluno, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        printf("Matricula: %d | G1: %.2lf | G2:%.2lf | Media: %.2lf \n",
-        aluno[i].matricula, aluno[i].g1, aluno[i].g2, aluno[i].media);
+void printaSub(struct S* lista) {
+    struct S* atual = lista;
+    while (atual != NULL) {
+        if (atual->media < 7.0) {
+            printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf\n", 
+                   atual->mat, atual->g1, atual->g2, atual->media);
+        }
+        atual = atual->prox;
     }
 }
 
-void imprimirSubstituicao(Aluno* alunos, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        if (alunos[i].media < 7.0)
-        {
-            printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf \n", 
-            alunos[i].matricula, alunos[i].g1, alunos[i].g2, alunos[i].media);
-        }
-    }
+void lerDados(int* mat, double* g1, double* g2) {
+    printf("Matricula: ");
+    scanf("%d", mat);
+    printf("G1: ");
+    scanf("%lf", g1);
+    printf("G2: ");
+    scanf("%lf", g2);
 }
 
 int main() {
-    Aluno *alunos = NULL;  
-    int numAlunos = 0;  
+    struct S* lista = NULL;
+    int mat;
+    double g1, g2;
     char continuar;
 
     do {
-        alunos = (Aluno*)realloc(alunos, (numAlunos + 1) * sizeof(Aluno));
+        lerDados(&mat, &g1, &g2);  
+        add(&lista, mat, g1, g2);  
 
-        printf("Digite a matricula do aluno: ");
-        scanf("%d", &alunos[numAlunos].matricula);
-        printf("Digite a nota G1: ");
-        scanf("%lf", &alunos[numAlunos].g1);
-        printf("Digite a nota G2: ");
-        scanf("%lf", &alunos[numAlunos].g2);
+        printf("Cadastrar outro? (Y/n): ");
+        scanf(" %c", &continuar); 
+    } while (continuar == 'y' || continuar == 'Y');
 
-        alunos[numAlunos].media = (alunos[numAlunos].g1 + alunos[numAlunos].g2) / 2.0;
+    calcMedia(lista);  
 
-        numAlunos++;
+    struct S* bestdosor = maior(lista);
+    printf("\nBest do sor:\n");
+    printf("Mat: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf\n", 
+           bestdosor->mat, bestdosor->g1, bestdosor->g2, bestdosor->media);
 
-        printf("Deseja continuar cadastro cadastrar(s/n): ");
-        scanf(" %c", &continuar);
-    } while (continuar == 's' || continuar == 'S');
+    sort(&lista);
+    printf("\nSort media:\n");
+    printa(lista);
 
-    calcularMedias(alunos, numAlunos);
+    printf("\nLista Substituicao:\n");
+    printaSub(lista);
 
-int AlMelhor = encontrarMelhorAluno(alunos, numAlunos);
-
-    printf("\n--- Melhor Aluno ---\n");
-    printf("Matricula: %d | G1: %.2lf | G2: %.2lf | Media: %.2lf\n",
-           alunos[AlMelhor].matricula, alunos[AlMelhor].g1, alunos[AlMelhor].g2, alunos[AlMelhor].media);
-
-    ordenarPorMedia(alunos, numAlunos);
-
-    printf("\n--- Alunos ordenados por media (decrescente) ---\n");
-    imprimirAlunos(alunos, numAlunos);
-
-    printf("\n--- Alunos que precisam de substituicao ---\n");
-    imprimirSubstituicao(alunos, numAlunos);
-
-    free(alunos);
+    struct S* atual = lista;
+    while (atual != NULL) {
+        struct S* temp = atual;
+        atual = atual->prox;
+        free(temp); 
+    }
 
     return 0;
 }
